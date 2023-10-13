@@ -165,6 +165,25 @@ namespace EntityFrameworkCoreMock.Tests
             Assert.That(dbSetMock.Object.First(x => x.Id == 2).Value, Is.EqualTo("second"));
             Assert.That(dbSetMock.Object.First(x => x.Id == 3).Value, Is.EqualTo("third"));
         }
+        
+        [Test]
+        public void DbContextMock_CreateDbSetMock_AddMultipleModelsWithDatabaseGeneratedIdentityKeyInheritance_ShouldGenerateSequentialKey()
+        {
+            var dbContextMock = new DbContextMock<TestDbContext>(Options);
+            var dbSetMock = dbContextMock.CreateDbSetMock(x => x.GeneratedKeyBaseModels, new[]
+            {
+                new GeneratedKeyInheritanceModelInheritanceModel {Id = 1, Value = "first"},
+                new GeneratedKeyInheritanceModelInheritanceModel {Id = 2, Value = "second"}
+            });
+            dbContextMock.Object.GeneratedKeyBaseModels.Add(new GeneratedKeyInheritanceModelInheritanceModel { Value = "third" });
+            dbContextMock.Object.SaveChanges();
+
+            Assert.That(dbSetMock.Object.Min(x => x.Id), Is.EqualTo(1));
+            Assert.That(dbSetMock.Object.Max(x => x.Id), Is.EqualTo(3));
+            Assert.That(dbSetMock.Object.First(x => x.Id == 1).Value, Is.EqualTo("first"));
+            Assert.That(dbSetMock.Object.First(x => x.Id == 2).Value, Is.EqualTo("second"));
+            Assert.That(dbSetMock.Object.First(x => x.Id == 3).Value, Is.EqualTo("third"));
+        }
 
         [Test]
         public void DbContextMock_CreateDbSetMock_AddMultipleModelsWithGuidAsDatabaseGeneratedIdentityKey_ShouldGenerateRandomGuidAsKey()
@@ -373,6 +392,8 @@ namespace EntityFrameworkCoreMock.Tests
             public virtual DbSet<ProtectedSetterPropertyModel> ProtectedSetterPropertyModels { get; set; }
 
             public virtual DbSet<GeneratedKeyModel> GeneratedKeyModels { get; set; }
+            
+            public virtual DbSet<GeneratedKeyInheritanceModelInheritanceModel> GeneratedKeyBaseModels { get; set; }
 
             public virtual DbSet<GeneratedGuidKeyModel> GeneratedGuidKeyModels { get; set; }
 
