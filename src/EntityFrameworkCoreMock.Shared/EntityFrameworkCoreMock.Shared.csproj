@@ -3,10 +3,12 @@
   <PropertyGroup>
     <Title>EntityFrameworkCoreMock.Shared</Title>
     <Description>Shared code for EntityFrameworkCoreMock</Description>
+    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks />
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.23" />
   </ItemGroup>
 
 </Project>

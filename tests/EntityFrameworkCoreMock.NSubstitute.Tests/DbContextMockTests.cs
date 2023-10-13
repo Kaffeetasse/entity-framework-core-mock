@@ -93,7 +93,7 @@ namespace EntityFrameworkCoreMock.NSubstitute.Tests
         public void DbContextMock_CreateDbSetMock_ShouldSetupMockForDbSetSelector()
         {
             var dbContextMock = new DbContextMock<TestDbContext>(Options);
-            Assert.Throws<NotImplementedException>(() => dbContextMock.Object.Users.ToArray());
+            Assert.Throws<NotSupportedException>(() => dbContextMock.Object.Users.ToArray());
             dbContextMock.CreateDbSetMock(x => x.Users);
             Assert.That(dbContextMock.Object.Users, Is.Not.Null);
         }
