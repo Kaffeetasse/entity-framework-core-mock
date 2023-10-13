@@ -167,15 +167,15 @@ namespace EntityFrameworkCoreMock.Tests
         }
         
         [Test]
-        public void DbContextMock_CreateDbSetMock_AddMultipleModelsWithDatabaseGeneratedIdentityKeyInheritance_ShouldGenerateSequentialKey()
+        public void DbContextMock_CreateDbSetMock_AddWithDatabaseGeneratedIdentityKeyWithIdsOnInitialEntities_ShouldGenerateSequentialKey()
         {
             var dbContextMock = new DbContextMock<TestDbContext>(Options);
-            var dbSetMock = dbContextMock.CreateDbSetMock(x => x.GeneratedKeyBaseModels, new[]
+            var dbSetMock = dbContextMock.CreateDbSetMock(x => x.GeneratedKeyModels, new[]
             {
-                new GeneratedKeyInheritanceModelInheritanceModel {Id = 1, Value = "first"},
-                new GeneratedKeyInheritanceModelInheritanceModel {Id = 2, Value = "second"}
+                new GeneratedKeyModel {Id = 1, Value = "first"},
+                new GeneratedKeyModel {Id = 2, Value = "second"}
             });
-            dbContextMock.Object.GeneratedKeyBaseModels.Add(new GeneratedKeyInheritanceModelInheritanceModel { Value = "third" });
+            dbSetMock.Object.Add(new GeneratedKeyModel { Value = "third" });
             dbContextMock.Object.SaveChanges();
 
             Assert.That(dbSetMock.Object.Min(x => x.Id), Is.EqualTo(1));
@@ -392,8 +392,6 @@ namespace EntityFrameworkCoreMock.Tests
             public virtual DbSet<ProtectedSetterPropertyModel> ProtectedSetterPropertyModels { get; set; }
 
             public virtual DbSet<GeneratedKeyModel> GeneratedKeyModels { get; set; }
-            
-            public virtual DbSet<GeneratedKeyInheritanceModelInheritanceModel> GeneratedKeyBaseModels { get; set; }
 
             public virtual DbSet<GeneratedGuidKeyModel> GeneratedGuidKeyModels { get; set; }
 
